@@ -68,7 +68,7 @@ The system is divided into multiple layers:
 ---
 
 ## 📂 Project Structure
-
+```bash
 batch-processing-project/
 │
 ├── server/
@@ -89,7 +89,7 @@ batch-processing-project/
 ├── package.json
 └── README.md
 
-
+```
 
 ---
 
