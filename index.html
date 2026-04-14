@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batch Processing with Resume</title>
+    <link rel="icon" href="data:,">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            color: #fff;
+        }
+        
+        header {
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        header h1 {
+            color: #38bdf8;
+        }
+        
+        nav a {
+            color: #cbd5f5;
+            margin-left: 20px;
+            text-decoration: none;
+        }
+        
+        .hero {
+            text-align: center;
+            padding: 80px 20px;
+        }
+        
+        .hero h2 {
+            font-size: 42px;
+            color: #38bdf8;
+        }
+        
+        .hero p {
+            max-width: 700px;
+            margin: 20px auto;
+            color: #cbd5f5;
+        }
+        
+        .btn {
+            background: #38bdf8;
+            color: #000;
+            padding: 12px 25px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .section {
+            padding: 60px 40px;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .card {
+            background: #1e293b;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .card h3 {
+            color: #38bdf8;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #94a3b8;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 15px;
+            background: #1e293b;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+        
+        #progressBar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(to right, #22c55e, #4ade80);
+            border-radius: 10px;
+            transition: 0.5s;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>BatchFlow</h1>
+        <nav>
+            <a href="#">Home</a>
+            <a href="#features">Features</a>
+            <a href="#architecture">Architecture</a>
+            <a href="#contact">Contact</a>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h2>Batch Processing with Resume Capability</h2>
+        <p>Efficiently process large-scale data jobs with fault tolerance, checkpointing, and distributed processing using modern backend technologies.</p>
+        <a href="#features" class="btn">Explore Features</a>
+    </section>
+
+    <section class="section" id="features">
+        <h2>Core Features</h2>
+        <div class="features">
+            <div class="card">
+                <h3>Express API</h3>
+                <p>Submit and manage large batch jobs through RESTful endpoints.</p>
+            </div>
+            <div class="card">
+                <h3>MongoDB Tracking</h3>
+                <p>Track job status, progress, and checkpoints in real-time.</p>
+            </div>
+            <div class="card">
+                <h3>Checkpointing</h3>
+                <p>Resume jobs from last saved state after failures.</p>
+            </div>
+            <div class="card">
+                <h3>Async Processing</h3>
+                <p>Node.js handles parallel job execution efficiently.</p>
+            </div>
+            <div class="card">
+                <h3>Shell Resume Scripts</h3>
+                <p>Restart interrupted jobs from last checkpoint via scripts.</p>
+            </div>
+            <div class="card">
+                <h3>Map-Reduce Workers</h3>
+                <p>Distributed processing across multiple workers for scalability.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="architecture">
+        <h2>System Architecture</h2>
+        <div class="features">
+            <div class="card">
+                <h3>API Layer</h3>
+                <p>Handles job submission and monitoring.</p>
+            </div>
+            <div class="card">
+                <h3>Processing Layer</h3>
+                <p>Executes batch jobs asynchronously.</p>
+            </div>
+            <div class="card">
+                <h3>Storage Layer</h3>
+                <p>MongoDB stores job metadata and progress.</p>
+            </div>
+            <div class="card">
+                <h3>Temporary Storage</h3>
+                <p>Unix temp files store intermediate results.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="contact">
+        <h2>Get Started</h2>
+        <p>Deploy your scalable batch processing system today and handle failures seamlessly with resume capability.</p>
+        <button onclick="submitJob()" class="btn">Start Job</button>
+        <div style="margin-top:30px; background:#020617; padding:20px; border-radius:15px;">
+
+            <h3>Status: <span id="status">-</span></h3>
+
+            <div class="progress-bar">
+                <div id="progressBar"></div>
+            </div>
+
+            <p id="progressText">0%</p>
+
+            <h3>Result: <span id="result">-</span></h3>
+
+        </div>
+    </section>
+
+    <footer class="footer">
+        <p>© 2026 BatchFlow | Built with Node.js, MongoDB & Unix</p>
+    </footer>
+
+    <script>
+        let jobId = "";
+
+        // START JOB
+        async function submitJob() {
+
+            document.getElementById("status").innerText = "Starting...";
+            document.getElementById("progressText").innerText = "0%";
+            document.getElementById("progressBar").style.width = "0%";
+            document.getElementById("result").innerText = "-";
+
+            try {
+                const res = await fetch("http://localhost:3000/submit", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        data: [1, 2, 3, 4, 5]
+                    })
+                });
+
+                const data = await res.json();
+                jobId = data.jobId;
+                console.log("JOB ID", jobId);
+
+
+
+                await fetch(`http://localhost:3000/start/${jobId}`, {
+                    method: "POST"
+                });
+
+                trackJob(); //  start tracking
+
+            } catch (err) {
+                console.log("START ERROR:", err);
+            }
+        }
+
+
+
+
+
+
+
+
+        //  GET RESULT ( FIXED RETRY) 
+        async function trackJob() {
+
+            if (!jobId) return;
+
+            try {
+                const res = await fetch(`http://127.0.0.1:3000/job-status/${jobId}?t=${Date.now()}`);
+                const data = await res.json();
+
+                console.log("STATUS:", data);
+
+                document.getElementById("status").innerText = data.status;
+                document.getElementById("progressText").innerText = Math.floor(data.progress) + "%";
+                document.getElementById("progressBar").style.width = data.progress + "%";
+
+                //  IMPORTANT: ALWAYS KEEP POLLING
+                if (data.progress < 100 || data.status !== "completed") {
+                    setTimeout(trackJob, 800);
+                } else {
+                    console.log("FINAL HIT ✅");
+                    setTimeout(getResult, 1000);
+                }
+
+            } catch (err) {
+                console.log("TRACK ERROR:", err);
+                setTimeout(trackJob, 1500);
+            }
+        }
+        async function getResult() {
+
+            try {
+                const res = await fetch(`http://127.0.0.1:3000/result/${jobId}?t=${Date.now()}`);
+                const data = await res.json();
+
+                console.log("RESULT:", data);
+
+                //  KEEP RETRYING UNTIL REAL RESULT
+                if (!data.result || data.result === "Waiting...") {
+                    console.log("⏳ Waiting for result...");
+                    setTimeout(getResult, 1000);
+                    return;
+                }
+
+                document.getElementById("result").innerText = data.result;
+
+            } catch (err) {
+                console.log("RESULT ERROR:", err);
+                setTimeout(getResult, 1500);
+            }
+        }
+    </script>
+</body>
+
+</html>
